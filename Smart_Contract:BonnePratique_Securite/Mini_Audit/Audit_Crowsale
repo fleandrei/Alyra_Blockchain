@@ -1,0 +1,17 @@
+Audit Smart Contract : Crowdsale.sol
+
+
+Fonction Crowdsale (constructeur): 
+Dans l’initialisation de l’owner  du contract, il faut remplacer l’utilisation de tx.origin par msg.sender. Cela, afin que ce soit bien celui qui appelle le constructeur qui devienne le propriétaire du contrat.
+Il faut également vérifier que l’adresse escrow passée en paramètre n’est pas null. 
+
+
+Fonction fallback: 
+Comme cette fonction est utilisée ici pour recevoir des ethers, il faut rajouter le mot-clé payable et vérifier que les données reçues sont vides via un require afin de prévenir l’utilisateur il appelle des fonctions qui n’existent pas dans le contrat. 
+Il faudrait également s’assurer que le transfert d’ether vers le compte escrow a bien été effectué en vérifiant le booléen renvoyé par la fonction send ou en remplaçant cette dernière par une fonction transfert.
+
+
+
+Fonction withdrawPayments: 
+Cette fonction ne respecte pas le modèle checks_effect_interactions en réalisant des changements d’états (ligne 32, 33) après avoir interagit avec un compte externe (ligne 30). On s’expose ainsi à un risque de réentrance permettant à l’attaquant d’appeler la fonction send indéfiniment sans que sa balance ne diminue. Il conviendrait donc de placer les changements d’états avant l’envoi d’ether. Il faut par ailleurs s’assurer  que ce dernier a bien été effectué en remplaçant send  par require.
+

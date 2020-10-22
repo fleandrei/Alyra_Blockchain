@@ -1,4 +1,6 @@
-pragma solidity 0.6.11;
+/*SPDX-License-Identifier: UNLICENSED*/
+//pragma solidity 0.6.11;
+pragma solidity 0.7.4;
 contract Whitelist {
 	mapping(address=>bool) whitelist;
 	event Authorized(address _address);
