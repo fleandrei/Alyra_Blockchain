@@ -201,7 +201,10 @@ contract Voting is Ownable{
         return Propositions;
     }
 
+    //event Status(WorkflowStatus status);
+
     function GetStatus() public view returns(WorkflowStatus){
+        //emit Status(Etat); 
         return Etat;
     }  
     

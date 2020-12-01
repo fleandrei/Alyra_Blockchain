@@ -62,7 +62,6 @@ class App extends Component {
 
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
-      console.log("Account=",accounts);
 
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
@@ -80,9 +79,12 @@ class App extends Component {
       instance.events.Voted(this.HandleVote);
       instance.events.VotingSessionEnded(this.HandleVotingSessionEnded);
       instance.events.VotesTallied(this.HandleVotesTallied);
+      //instance.events.Status((err,ev)=>{console.log("GetStatus:",ev.returnValues.status)});
 
       const owner_address = await instance.methods.owner().call();
-      console.log("App:componentDidMount");
+      console.log("owner: ",owner_address);
+      //console.log("instance: ",instance);
+
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3: web3, accounts: accounts, contract: instance, IsOwner:(owner_address == accounts[0]) }, this.LoadState);
@@ -98,19 +100,23 @@ class App extends Component {
   LoadState = async () => {
     const { accounts, contract } = this.state;
     
+    //var statu = await contract.methods.GetStatus().send({from:accounts[0]});
     var statu = await contract.methods.GetStatus().call();
     const Status = Status_Sol2Web(statu);
+
+    //console.log("statu: ",statu,",  Status: ",Status);
     //const Status = await contract.methods.GetStatus().call();
 
     // récupérer la liste des comptes autorisés
     const whitelist = await contract.methods.GetWhiteList().call();
     let Propositions = await contract.methods.GetPropositions().call();
-    Propositions = Propositions.map(p=>{return({Description:p[0], Score:p[1]})})
+
+    if(Propositions)
+      Propositions = Propositions.map(p=>{return({Description:p[0], Score:p[1]})});
    
     let HasVoted= false;
 
     if (whitelist && whitelist.includes(accounts[0])) {
-      console.log("Account= ",accounts[0]);
       HasVoted = await contract.methods.HasVoted(accounts[0]).call();
     }
     
@@ -132,7 +138,6 @@ class App extends Component {
     if(whitelist == null || !whitelist.includes(voterAddress)){
       whitelist = (whitelist != null) ? (whitelist.concat([voterAddress])): [voterAddress];
       this.setState({whitelist: whitelist});
-      console.log("HandleVoterRegistered: event= ",ev);
     }
 
   };
@@ -146,11 +151,9 @@ class App extends Component {
   HandleProposalRegistered = async(err,event)=>{
     const { Propositions, contract } = this.state;
     const PropId = event.returnValues.proposalId;
-    console.log("PropId= ",PropId);
     const Description = await contract.methods.ProposalDescriptionById(PropId).call();
     const Proposal = {Description: Description, Score:0};
     const NewProposition = (Propositions != null) ? (Propositions.concat([Proposal])): [Proposal];
-    console.log("NewProposition= ",NewProposition);
     this.setState({Propositions: NewProposition});
   }
 
@@ -195,7 +198,6 @@ class App extends Component {
     await contract.methods.RegisterVoter(address).send({from: accounts[0]});
     // Récupérer la liste des comptes autorisés
     //this.UpdateWhitelist();
-    console.log("RegisterVoter: nouvelle address: ",address);
   }
 
   //Permet à l'Owner de passer à l'étape de créations des propositions.
@@ -275,8 +277,6 @@ class App extends Component {
     }
     var show;
     console.log("State=",this.state);
-    console.log("App:Render: Status=",this.state.Status);
-    console.log("this.state.Status=", typeof this.state.Status,", WorkflowStatus.RegisteringVoters=", typeof WorkflowStatus.RegisteringVoters);
     switch (this.state.Status){
       case WorkflowStatus.RegisteringVoters:
         show = <div className="App">
