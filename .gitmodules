@@ -1,0 +1,3 @@
+[submodule "Integration_Livraison/Simple_Storage_Deployment"]
+	path = Integration_Livraison/Simple_Storage_Deployment
+	url = https://github.com/fleandrei/SimpleStorage_AlyraTraining_Submodule.git

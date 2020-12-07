@@ -54,14 +54,12 @@ contract('ERC20', function (accounts) { //contract renvoie un tableau des accoun
 		expect(allowance).to.be.bignumber.equal(amount);
 	});
 	it("Vérifie fonction transferFrom", async function (){
-		const AllowanceAmount = new BN(10);
-		const TransferAmount = new BN(10);
-		await this.ERC20Instance.approve(recipient, AllowanceAmount, {from:owner});
-
 		const balanceOwnerBeforeTransfer = await this.ERC20Instance.balanceOf(owner);
 		const balanceRecientBisBeforeTransfer = await this.ERC20Instance.balanceOf(recipient_bis);
+		const AllowanceAmount = new BN(10);
+		const TransferAmount = new BN(10);
 
-
+		await this.ERC20Instance.approve(recipient, AllowanceAmount, {from:owner});
 		await this.ERC20Instance.transferFrom(owner, recipient_bis, TransferAmount, {from:recipient});
 		
 		const balanceRecipientBisAfterTransfer = await this.ERC20Instance.balanceOf(recipient_bis);
