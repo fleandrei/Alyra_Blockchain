@@ -27,7 +27,6 @@ class Vote extends Component {
 
   handleVote = async()=>{
     const proposalId= this.proposalId.current.value;
-    console.log("Vote.js/handleVote: this.proposalId= ", this.proposalId.current.value);
     this.props.Vote(proposalId);
     this.setState({HasVoted:true});
   }

@@ -1,3 +1,15 @@
 [submodule "Integration_Livraison/Simple_Storage_Deployment"]
 	path = Integration_Livraison/Simple_Storage_Deployment
 	url = https://github.com/fleandrei/SimpleStorage_AlyraTraining_Submodule.git
+[submodule "DEFI/DEFI3_Alyra"]
+	path = DEFI/DEFI3_Alyra
+	url = https://github.com/fleandrei/DEFI3_Alyra.git
+[submodule "DEFI/DEFI3_SystemPaiment"]
+	path = DEFI/DEFI3_SystemPaiment
+	url = https://github.com/fleandrei/DEFI3_Alyra.git
+[submodule "DEFI/DEFI4_Staking/DEFI/DEFI3_SystemVote_Deploiement"]
+	path = DEFI/DEFI4_Staking/DEFI/DEFI3_SystemVote_Deploiement
+	url = https://github.com/fleandrei/DEFI3_Alyra.git
+[submodule "DEFI3_SystemVote_Deploiement"]
+	path = DEFI3_SystemVote_Deploiement
+	url = https://github.com/fleandrei/DEFI3_Alyra.git

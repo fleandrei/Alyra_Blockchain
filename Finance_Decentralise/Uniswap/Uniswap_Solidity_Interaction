@@ -1,0 +1,49 @@
+//TP Comment interagir avec le protocole Uniswap ?           Avec Smart contract
+
+
+pragma solidity 0.6.12;
+ 
+interface IUniswap {
+ function swapExactTokensForETH(
+   uint amountIn,
+   uint amountOutMin,
+   address[] calldata path,
+   address to,
+   uint deadline)
+   external
+   returns (uint[] memory amounts);
+ function WETH() external pure returns (address);
+}
+ 
+interface IERC20 {
+ function transferFrom(
+   address sender,
+   address recipient,
+   uint256 amount)
+   external
+   returns (bool);
+ function approve(address spender, uint256 amount) external returns (bool);
+}
+
+contract MyDeFiProject {
+ IUniswap uniswap;
+ 
+ constructor(address _uniswap) public{
+   uniswap = IUniswap(_uniswap); // initialisation du smart contract d'Uniswap
+ }
+  // La fonction qui va permettre le swap 
+ function swapTokensForEth(address token, uint amountIn, uint amountOutMin, uint deadline) external {
+   IERC20(token).transferFrom(msg.sender, address(this), amountIn); // Transfert des tokens en question au smart contract ! Il faut penser à approve ce transfert avant l’utilisation de cette fonction 
+   address[] memory path = new address[](2); // Création du path
+   path[0] = address(token); // initialisation du path avec l'address du token à échanger
+   path[1] = uniswap.WETH(); // initialisation du path avec l'address du WETH d'Uniswap
+   IERC20(token).approve(address(uniswap), amountIn); // autoriser uniswap à utiliser nos tokens
+   uniswap.swapExactTokensForETH(
+     amountIn,
+     amountOutMin,
+     path,
+     msg.sender,
+     deadline
+   ); // effectuer le swap, ETH sera transférer directement au msg.sender
+ }
+}
