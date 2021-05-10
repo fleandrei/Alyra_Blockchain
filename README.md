@@ -1,2 +1,2 @@
 # Alyra_Blockchain
-Alyra Blockchain Formation 
+Code developed during the Alyra Blockchain Formation.
